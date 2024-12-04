@@ -1,17 +1,23 @@
 package com.ratolla.twitter_simplified.controllers;
 
 import com.ratolla.twitter_simplified.controllers.dto.CreateTweetDTO;
+import com.ratolla.twitter_simplified.controllers.dto.FeedDTO;
+import com.ratolla.twitter_simplified.controllers.dto.FeedItemDTO;
 import com.ratolla.twitter_simplified.enitities.Role;
 import com.ratolla.twitter_simplified.enitities.Tweet;
 import com.ratolla.twitter_simplified.enitities.User;
 import com.ratolla.twitter_simplified.repositories.TweetRepository;
 import com.ratolla.twitter_simplified.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -74,6 +80,10 @@ public class TweetController {
     @GetMapping("/feed")
     public ResponseEntity<FeedDTO> feed(@RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+        var tweets = tweetRepository.findAll(PageRequest.of(
+                page, pageSize, Sort.Direction.DESC, "creationTimeStamp"))
+                .map(tweet -> new FeedItemDTO(tweet.getId(), tweet.getContent(), tweet.getUser().getUsername()));
 
+        return ResponseEntity.ok(new FeedDTO(tweets.getContent(), page, pageSize, tweets.getTotalPages(), tweets.getTotalElements()));
     }
 }
