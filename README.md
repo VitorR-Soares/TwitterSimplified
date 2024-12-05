@@ -73,7 +73,7 @@ ACESSO LIVRE / POST / login  - Realiza login na aplicação, com username e pass
 
 ACESSO LIVRE / POST / createUser - Registra um novo usuário no banco de dados, com username e password
 
-ADMIN / GET / listUsers - Lista usuários, retornando a lista de todas as informações dos usuários [Demana autorização de 'admin']
+ADMIN / GET / listUsers - Lista usuários, retornando a lista de todas as informações dos usuários 
 
 BASIC / POST / createTweet - Cria um tweet, com o conteúdo digitado
 
